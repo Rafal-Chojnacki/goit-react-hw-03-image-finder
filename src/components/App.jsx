@@ -1,9 +1,11 @@
 import React from 'react';
+import axios from 'axios';
 import SearchBar from './searchBar';
 import ImageGallery from './ImageGallery';
 import { Component } from 'react';
 import Modal from './modal';
 import Button from './button';
+import { ColorRing } from 'react-loader-spinner';
 
 class App extends Component {
   constructor(props) {
@@ -11,13 +13,15 @@ class App extends Component {
     this.state = {
       images: [],
       selectedImage: null,
+      currentPage: 1,
+      isLoading: false,
     };
   }
 
   setImages = images => {
     this.setState(prevState => ({
       ...prevState,
-      images: images,
+      images: [...prevState.images, ...images],
     }));
   };
 
@@ -29,15 +33,40 @@ class App extends Component {
     this.setState({ selectedImage: null });
   };
 
+  loadMoreImages = async () => {
+    const { searchTerm, currentPage } = this.state;
+    const apiKey = '3xxxxxxx3-8cc19d34af378b8aeb6cde8f1';
+    const nextPage = currentPage + 1;
+    console.log(nextPage);
+    const response = await axios.get(
+      `https://pixabay.com/api/?q=${searchTerm}&page=${nextPage}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
+    );
+    const newImages = response.data.hits;
+    console.log(newImages);
+    this.setState(prevState => ({
+      images: [...prevState.images, ...newImages],
+      currentPage: nextPage,
+    }));
+    console.log(this.state.images);
+  };
+  
+
   render() {
+    const { isLoading, images, selectedImage } = this.state;
+
     return (
       <div>
         <SearchBar handleImages={this.setImages} />
-        <ImageGallery images={this.state.images} openModal={this.openModal} />
-        {this.state.selectedImage && (
-          <Modal image={this.state.selectedImage} onClose={this.closeModal} />
+        {isLoading ? (
+            <ColorRing />
+        ) : (
+          <ImageGallery 
+          images={images} openModal={this.openModal} />
         )}
-        <Button/>
+        {selectedImage && (
+          <Modal image={selectedImage} onClose={this.closeModal} />
+        )}
+        <Button onClick={this.loadMoreImages} />
       </div>
     );
   }
