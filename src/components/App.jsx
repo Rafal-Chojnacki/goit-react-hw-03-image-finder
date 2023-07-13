@@ -11,12 +11,20 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchTerm: '',
       images: [],
       selectedImage: null,
       currentPage: 1,
       isLoading: false,
     };
   }
+
+  handleImages = (searchTerm, newImages) => {
+    this.setState({
+      searchTerm,
+      images: newImages,
+    });
+  };
 
   setImages = images => {
     this.setState(prevState => ({
@@ -49,19 +57,22 @@ class App extends Component {
     }));
     console.log(this.state.images);
   };
-  
 
   render() {
     const { isLoading, images, selectedImage } = this.state;
 
     return (
       <div>
-        <SearchBar handleImages={this.setImages} />
+        <SearchBar handleImages={this.handleImages} />
         {isLoading ? (
-            <ColorRing />
+          <ColorRing />
         ) : (
-          <ImageGallery 
-          images={images} openModal={this.openModal} />
+          <ImageGallery
+            key={this.state.searchTerm}
+            images={images}
+            searchTerm={this.state.searchTerm}
+            openModal={this.openModal}
+          />
         )}
         {selectedImage && (
           <Modal image={selectedImage} onClose={this.closeModal} />

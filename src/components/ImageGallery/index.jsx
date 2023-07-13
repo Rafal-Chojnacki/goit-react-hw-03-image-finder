@@ -4,19 +4,21 @@ import ImageGalleryItem from 'components/ImageGalleryItem';
 
 class ImageGallery extends Component {
   render() {
-    console.log(this.props.images);
+    const { images, openModal } = this.props;
+  
     return (
       <ul className={css.gallery}>
-        {this.props.images.map(image => (
+        {images.map(image => (
           <ImageGalleryItem
-            key={image.id}
+            key={`${this.props.searchTerm}-${image.id}`}
             image={image}
-            openModal={this.props.openModal}
+            openModal={openModal}
           />
         ))}
       </ul>
     );
   }
 }
+
 
 export default ImageGallery;

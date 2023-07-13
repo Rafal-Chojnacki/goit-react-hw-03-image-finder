@@ -17,15 +17,15 @@ class SearchBar extends Component {
     event.preventDefault();
     const { searchTerm } = this.state;
     const apiKey = '31641463-8cc19d34af378b8aeb6cde8f1';
-
+  
     this.setState({ isLoading: true });
-
+  
     setTimeout(async () => {
       try {
         const response = await axios.get(
           `https://pixabay.com/api/?q=${searchTerm}&page=1&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
         );
-        this.props.handleImages(response.data.hits);
+        this.props.handleImages(searchTerm, response.data.hits); // Pass both searchTerm and images
       } catch (error) {
         console.log(error);
       } finally {
@@ -33,21 +33,16 @@ class SearchBar extends Component {
       }
     }, 1000);
   };
+  
 
   handleChange = event => {
     this.setState(prevState => ({
       ...prevState,
       searchTerm: event.target.value,
-      images: [],
+      images: [], // Clear the images
     }));
   };
 
-  clearImages = () => {
-    this.setState(prevState => ({
-      ...prevState,
-      images: [],
-    }));
-  };
   render() {
     const { searchTerm } = this.state;
 
