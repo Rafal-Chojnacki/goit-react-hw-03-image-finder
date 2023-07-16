@@ -25,7 +25,7 @@ class SearchBar extends Component {
         const response = await axios.get(
           `https://pixabay.com/api/?q=${searchTerm}&page=1&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
         );
-        this.props.handleImages(searchTerm, response.data.hits); // Pass both searchTerm and images
+        this.props.handleImages(searchTerm, response.data.hits);
       } catch (error) {
         console.log(error);
       } finally {
@@ -39,7 +39,7 @@ class SearchBar extends Component {
     this.setState(prevState => ({
       ...prevState,
       searchTerm: event.target.value,
-      images: [], // Clear the images
+      images: [],
     }));
   };
 

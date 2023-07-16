@@ -43,9 +43,8 @@ class App extends Component {
 
   loadMoreImages = async () => {
     const { searchTerm, currentPage } = this.state;
-    const apiKey = '3xxxxxxx3-8cc19d34af378b8aeb6cde8f1';
+    const apiKey = '31641463-8cc19d34af378b8aeb6cde8f1';
     const nextPage = currentPage + 1;
-    console.log(nextPage);
     const response = await axios.get(
       `https://pixabay.com/api/?q=${searchTerm}&page=${nextPage}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
     );
@@ -63,6 +62,7 @@ class App extends Component {
 
     return (
       <div>
+        {console.log(images.total)}
         <SearchBar handleImages={this.handleImages} />
         {isLoading ? (
           <ColorRing />
@@ -77,9 +77,14 @@ class App extends Component {
         {selectedImage && (
           <Modal image={selectedImage} onClose={this.closeModal} />
         )}
-        <Button onClick={this.loadMoreImages} />
+        {this.state.images.total === 0 ? (
+          <Button isInvisible={true} onClick={this.loadMoreImages} />
+        ) : (
+          <Button onClick={this.loadMoreImages} />
+        )}
       </div>
     );
+    
   }
 }
 
