@@ -6,6 +6,7 @@ import { Component } from 'react';
 import Modal from './modal';
 import Button from './button';
 import { ColorRing } from 'react-loader-spinner';
+import Notiflix from 'notiflix';
 
 class App extends Component {
   constructor(props) {
@@ -51,14 +52,18 @@ class App extends Component {
       `https://pixabay.com/api/?q=${searchTerm}&page=${nextPage}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
     );
     const newImages = response.data.hits;
-    console.log(response);
     this.setState(prevState => ({
       images: [...prevState.images, ...newImages],
       currentPage: nextPage,
     }));
-  };
-
+  
+  }
   render() {
+    if (this.state.images.length === this.state.totalHits) {
+      Notiflix.Notify.warning('There are not more images which You search or You have reached the limit')
+  };
+    console.log(`The number of images is ${this.state.images.length}`)
+  console.log(`the total hits number is ${this.state.totalHits}`)
     const { isLoading, images, selectedImage } = this.state;
     return (
       <div>
