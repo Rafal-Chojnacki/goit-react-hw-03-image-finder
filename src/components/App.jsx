@@ -16,13 +16,15 @@ class App extends Component {
       selectedImage: null,
       currentPage: 1,
       isLoading: false,
+      totalHits: 0,
     };
   }
 
-  handleImages = (searchTerm, newImages) => {
+  handleImages = (searchTerm, newImages, totalHits) => {
     this.setState({
       searchTerm,
       images: newImages,
+      totalHits,
     });
   };
 
@@ -49,20 +51,17 @@ class App extends Component {
       `https://pixabay.com/api/?q=${searchTerm}&page=${nextPage}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
     );
     const newImages = response.data.hits;
-    console.log(newImages);
+    console.log(response);
     this.setState(prevState => ({
       images: [...prevState.images, ...newImages],
       currentPage: nextPage,
     }));
-    console.log(this.state.images);
   };
 
   render() {
     const { isLoading, images, selectedImage } = this.state;
-
     return (
       <div>
-        {console.log(images.total)}
         <SearchBar handleImages={this.handleImages} />
         {isLoading ? (
           <ColorRing />
@@ -77,14 +76,13 @@ class App extends Component {
         {selectedImage && (
           <Modal image={selectedImage} onClose={this.closeModal} />
         )}
-        {this.state.images.total === 0 ? (
+        {this.state.images.length === 0 || this.state.images.length >= this.state.totalHits ? (
           <Button isInvisible={true} onClick={this.loadMoreImages} />
         ) : (
           <Button onClick={this.loadMoreImages} />
         )}
       </div>
     );
-    
   }
 }
 

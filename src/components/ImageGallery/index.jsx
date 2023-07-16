@@ -4,8 +4,13 @@ import ImageGalleryItem from 'components/ImageGalleryItem';
 
 class ImageGallery extends Component {
   render() {
-    const { images, openModal } = this.props;
-  
+    const { images, openModal, hits } = this.props;
+    console.log(images.length)
+    if (hits === 0) {
+      <ul className={css.gallery}>
+      </ul>
+      return;
+    }
     return (
       <ul className={css.gallery}>
         {images.map(image => (
@@ -19,6 +24,5 @@ class ImageGallery extends Component {
     );
   }
 }
-
 
 export default ImageGallery;
